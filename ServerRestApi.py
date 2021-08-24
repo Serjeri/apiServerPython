@@ -1,46 +1,46 @@
 # написать rest api сервес по бронированию комнат
 # Делается
+#GEt by ID   сделать через dir
 
 from flask import Flask, jsonify, request
+
 app = Flask(__name__)
+client = app.test_client()
 
-
-rooms = [
-    {
-        'id': 1,
-        'room': 'atelier',
-        'quantity': 10
+rooms = {
+    1: {
+        "room": "studioApartment",
+        "Quantity": 7
     },
-    {
-        'id': 2,
-        'room': 'one-room_apartment',
-        'quantity': 3
+    2: {
+        "room": "studioApartment",
+        "Quantity": 5
     },
-    {
-        'id': 3,
-        'room': 'two-room_apartment',
-        'quantity': 5
+    3: {
+        "room": "studioApartment",
+        "Quantity": 10
     }
-]
+}
 
 @app.route('/rooms', methods=['GET'])
-def get_list():
+def get_room():
     return jsonify(rooms)
 
-@app.route('/rooms/<int:room_name>', methods=['PUT'])
-def update_room(room_name):
-    item = next((x for x in rooms if x ['room'] == room_name), None)
-    params = request.json
-    item.update(params)
-    return item
+@app.route('/rooms', methods=['POST'])
+def create_room():
+    rooms[len( rooms ) + 1] = request.json
+    return jsonify(rooms)
 
-@app.route('/rooms/<int:room_name>', methods=['DELETE'])
-def delete_room(room_name):
-    id_room, _ = next((x for x in enumerate(rooms) if x[1] ['room'] == room_name), (None,None))
-    rooms.pop(id_room)
-    return '', 204
+@app.route('/rooms/<int:id>', methods=['PUT'])
+def update_room(id):
+    rooms.get(id).update(request.json)
+    return jsonify(rooms)
+
+@app.route('/rooms/<int:id>', methods=['DELETE'])
+def delete_room(id):
+    rooms.pop(id)
+    return jsonify(rooms)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
